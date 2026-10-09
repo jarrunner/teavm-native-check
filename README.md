@@ -1,4 +1,4 @@
-# teavm_native_check
+# teavm-native-check
 
 A javac plugin that checks native memory use in Java code compiled to C by TeaVM. In TeaVM, ordinary Java is already memory-safe: the C backend inserts null and bounds checks, and the GC owns objects. The unsafe part is `org.teavm.interop.Address`, a bare pointer. This plugin turns the rules for using it safely into compile errors, so they no longer depend on review. It runs only at compile time and adds nothing to the program.
 
@@ -25,7 +25,7 @@ Every message says what is wrong, why it matters, and what to write instead:
 
 ## Using it in a project
 
-1. Install it once: `mvn install` in this folder (JDK 21 or newer; no dependencies beyond the JDK's own `jdk.compiler`).
+1. It is on Maven Central as `io.github.jarrunner:teavm-native-check` (JDK 21 or newer; no dependencies beyond the JDK's own `jdk.compiler`). To build it yourself: `mvn install`.
 2. Define the annotations in your own code, with SOURCE retention so they cost nothing: `Handle`, `Unsafe(String value)`, `Scoped`, `CType(String value)`, `Escapes`, `Returned`, and for NC8 `Acquires(String value)` and `Owns(String value)`, for NC9 `ForeignThread(String value)` and `SameThread(String value)`, for NC10 `Fails(String value)` and `Nullable`. The names can be changed through arguments.
 3. Run javac with the plugin. With Maven:
 
@@ -34,13 +34,13 @@ Every message says what is wrong, why it matters, and what to write instead:
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <annotationProcessorPaths>
-              <path><groupId>io.github.jarrunner</groupId><artifactId>teavm_native_check</artifactId><version>1.0</version></path>
+              <path><groupId>io.github.jarrunner</groupId><artifactId>teavm-native-check</artifactId><version>1.0.0</version></path>
             </annotationProcessorPaths>
             <compilerArgs><arg>-Xplugin:NativeCheck scope=my.N.memScoped alloc=my.N.alloc raw=my.N,my.Bindings</arg></compilerArgs>
           </configuration>
         </plugin>
 
-   With plain javac: `javac -processorpath teavm_native_check-1.0.jar "-Xplugin:NativeCheck scope=..." ...`.
+   With plain javac: `javac -processorpath teavm-native-check-1.0.0.jar "-Xplugin:NativeCheck scope=..." ...`.
 
 Arguments (`key=value`, lists comma separated), all in `Config.java`:
 - `scope`: the method(s) whose lambda argument is a scope (`pkg.N.memScoped`).
@@ -56,7 +56,7 @@ Arguments (`key=value`, lists comma separated), all in `Config.java`:
 - `suspend`: methods that suspend a fiber (defaults to sleep/join/yield/wait).
 - `mode=warn`: report without failing, for a first look at an existing code base.
 
-jr's own configuration is the `<nativecheck>` property in `../jr/pom.xml`, and its usage guide is `../jr/README.md`, section "Native memory".
+A complete worked setup is [jr](https://github.com/jarrunner/jr): the `<nativecheck>` property in `jr/pom.xml`, and the section "Native memory" of `jr/README.md`.
 
 ## Tests
 
