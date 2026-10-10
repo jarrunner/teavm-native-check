@@ -24,14 +24,14 @@ import java.util.*;
  *  <li>{@code tracked} exception types a method must declare when it lets them out (NC8-throws), so the resource rule
  *      sees every path one method at a time; {@code takes} methods that take over a resource passed to them, so the caller
  *      no longer closes it (a hand-over helper for what the C runtime adopts, or what stays open until the process exits)
- *  <li>{@code foreign}, {@code same} annotation names for NC9 (which OS thread calls a callback); {@code callbacks} the
+ *  <li>{@code foreign}, {@code same} annotation names for NC9 (which OS thread calls a callback), {@code unmanaged} the annotation a {@code foreign} method must also carry; {@code callbacks} the
  *      methods that turn a named Java method into a C function pointer (default {@code org.teavm.interop.Function.get})
  *  <li>{@code fails}, {@code nullable} annotation names for NC10: a method whose result may be its failure value (the
  *      value named, "NULL" or a constant such as INVALID_HANDLE_VALUE), and a parameter that accepts that value
  *  <li>{@code mode} {@code error} (default) fails the build, {@code warn} only reports
  *  </ul> */
 final class Config {
-    final String pointer, unsafe, handle, scoped, async, ctype, escapes, returned, acquires, owns, foreign, same, fails, nullable;
+    final String pointer, unsafe, handle, scoped, async, ctype, escapes, returned, acquires, owns, foreign, same, unmanaged, fails, nullable;
     final Set<String> scope, raw, suspend, alloc, allocators, wrappers, trust, tracked, takes, callbackFactory;
     final boolean warn;
 
@@ -48,6 +48,7 @@ final class Config {
         owns = m.getOrDefault("owns", "Owns");
         foreign = m.getOrDefault("foreign", "ForeignThread");
         same = m.getOrDefault("same", "SameThread");
+        unmanaged = m.getOrDefault("unmanaged", "org.teavm.interop.Unmanaged");
         fails = m.getOrDefault("fails", "Fails");
         nullable = m.getOrDefault("nullable", "Nullable");
         callbackFactory = list(m.getOrDefault("callbacks", "org.teavm.interop.Function.get"));
@@ -69,7 +70,7 @@ final class Config {
     }
 
     static Config parse(String... args) {
-        var known = Set.of("pointer", "unsafe", "handle", "scoped", "async", "ctype", "escapes", "returned", "acquires", "owns", "tracked", "takes", "foreign", "same", "callbacks", "fails", "nullable", "scope", "raw", "alloc",
+        var known = Set.of("pointer", "unsafe", "handle", "scoped", "async", "ctype", "escapes", "returned", "acquires", "owns", "tracked", "takes", "foreign", "same", "unmanaged", "callbacks", "fails", "nullable", "scope", "raw", "alloc",
                 "allocators", "wrappers", "trust", "suspend", "mode");
         var m = new HashMap<String, String>();
         for (var a : args) {

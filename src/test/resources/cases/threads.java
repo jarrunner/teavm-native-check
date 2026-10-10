@@ -1,7 +1,8 @@
-// expect: NC9-callback NC9-foreign NC9-foreign NC9-foreign
+// expect: NC9-callback NC9-foreign NC9-foreign NC9-foreign NC9-unmanaged
 package t;
 
 import org.teavm.interop.Function;
+import org.teavm.interop.Unmanaged;
 import static t.N.*;
 
 class Threads {
@@ -19,6 +20,7 @@ class Threads {
     static int onSame(int x) { memScoped(() -> { alloc(8); }); return x; }
 
     @ForeignThread("the runtime's exit thread; ours is blocked meanwhile")
+    @Unmanaged
     static int onForeign(int x) { flag = true; return x; }
 
     static int unmarked(int x) { return x; }

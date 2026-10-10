@@ -44,6 +44,7 @@ final class Checker extends TreePathScanner<Void, Void> {
         checkReason(el);
         ctypes.learn(getCurrentPath());
         borrows.learn(getCurrentPath());
+        if (Facts.has(el, cfg.foreign) && !Facts.has(el, cfg.unmanaged)) report(Rule.UNMANAGED, node, node.getName());
         if (el instanceof ExecutableElement m) {
             escapes.onMethod(node, m);
             resources.onMethod(getCurrentPath(), node, m);
@@ -139,7 +140,7 @@ final class Checker extends TreePathScanner<Void, Void> {
 
     private void checkPointerOp(MethodInvocationTree node, String name) {
         switch (name) {
-            case "ofData" -> report(Rule.OF_DATA, node);
+            case "ofData" -> { if (!lex.rawAllowed(getCurrentPath())) report(Rule.OF_DATA, node); }
             case "ofObject" -> report(Rule.OF_OBJECT, node);
             case "fromLong", "fromInt" -> escapes.onFromNumber(getCurrentPath(), node, name);
             default -> {
