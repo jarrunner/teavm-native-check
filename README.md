@@ -1,4 +1,19 @@
+<p align="center"><img src="https://jarrunner.github.io/jr-icon.svg" width="96" alt="jr"></p>
+
 # teavm-native-check
+
+For Java compiled to C with [TeaVM](https://teavm.org): a javac plugin that makes the rules for native memory compile errors, so a dangling pointer, a leaked handle or an unchecked failure value is caught when you build, not when it crashes.
+
+- **Ten checks** (NC1 to NC10): pointers that outlive their scope, OS handles not closed on every path, failure values used before they are tested, callbacks that would run Java on a foreign thread, and more.
+- **Every message says what is wrong, why it matters, and what to write instead.**
+- **Compile time only.** It adds nothing to the program and needs nothing beyond the JDK.
+- **Proven on a real program:** [jr](https://github.com/jarrunner/jr), a native launcher written in Java, builds with it on every compile.
+
+**Try it:** it is on Maven Central as `io.github.jarrunner:teavm-native-check:1.0.0`. Add it to the compiler's `annotationProcessorPaths` as shown in [Using it in a project](#using-it-in-a-project).
+
+[What it checks](#what-it-checks) · [Using it](#using-it-in-a-project) · [jr](https://github.com/jarrunner/jr) · [jarrunner.github.io](https://jarrunner.github.io)
+
+## What it is
 
 A javac plugin that checks native memory use in Java code compiled to C by TeaVM. In TeaVM, ordinary Java is already memory-safe: the C backend inserts null and bounds checks, and the GC owns objects. The unsafe part is `org.teavm.interop.Address`, a bare pointer. This plugin turns the rules for using it safely into compile errors, so they no longer depend on review. It runs only at compile time and adds nothing to the program.
 
