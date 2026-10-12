@@ -9,7 +9,7 @@ For Java compiled to C with [TeaVM](https://teavm.org): a javac plugin that make
 - **Compile time only.** It adds nothing to the program and needs nothing beyond the JDK.
 - **Proven on a real program:** [jr](https://github.com/jarrunner/jr), a native launcher written in Java, builds with it on every compile.
 
-**Try it:** it is on Maven Central as `io.github.jarrunner:teavm-native-check:1.0.0`. Add it to the compiler's `annotationProcessorPaths` as shown in [Using it in a project](#using-it-in-a-project).
+**Try it:** it is on Maven Central as `io.github.jarrunner:teavm-native-check:1.1.0`. Add it to the compiler's `annotationProcessorPaths` as shown in [Using it in a project](#using-it-in-a-project).
 
 [What it checks](#what-it-checks) · [Using it](#using-it-in-a-project) · [jr](https://github.com/jarrunner/jr) · [jarrunner.github.io](https://jarrunner.github.io)
 
@@ -49,13 +49,13 @@ Every message says what is wrong, why it matters, and what to write instead:
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <annotationProcessorPaths>
-              <path><groupId>io.github.jarrunner</groupId><artifactId>teavm-native-check</artifactId><version>1.0.0</version></path>
+              <path><groupId>io.github.jarrunner</groupId><artifactId>teavm-native-check</artifactId><version>1.1.0</version></path>
             </annotationProcessorPaths>
             <compilerArgs><arg>-Xplugin:NativeCheck scope=my.N.memScoped alloc=my.N.alloc raw=my.N,my.Bindings</arg></compilerArgs>
           </configuration>
         </plugin>
 
-   With plain javac: `javac -processorpath teavm-native-check-1.0.0.jar "-Xplugin:NativeCheck scope=..." ...`.
+   With plain javac: `javac -processorpath teavm-native-check-1.1.0.jar "-Xplugin:NativeCheck scope=..." ...`.
 
 Arguments (`key=value`, lists comma separated), all in `Config.java`:
 - `scope`: the method(s) whose lambda argument is a scope (`pkg.N.memScoped`).
